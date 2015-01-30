@@ -10,7 +10,7 @@ public class RunIDXStats
 	ArrayList<String> collect()
 		throws Exception
 	{
-		ProcessBuilder pb = new ProcessBuilder(CLIParserFB.samtoolsPath, "idxstats", CLIParserFB.bamFiles[0]);
+		ProcessBuilder pb = new ProcessBuilder(CLIParserFB.samtoolsPath, "idxstats", getBamFile());
 
 		Process proc = pb.start();
 
@@ -26,6 +26,18 @@ public class RunIDXStats
 			Thread.sleep(10);
 
 		return contigs;
+	}
+
+	private String getBamFile()
+		throws Exception
+	{
+		// If -b option was used, just take the first file
+		if (CLIParserFB.bamFiles != null)
+			return CLIParserFB.bamFiles[0];
+
+		// If -L option was used, read the first line of the file and use that
+		BufferedReader in = new BufferedReader(new FileReader(new File(CLIParserFB.bamFileList)));
+		return in.readLine();
 	}
 
 	private class IdxStatsCatcher extends StreamCatcher

@@ -10,6 +10,8 @@ class CLIParserFB
 	static String samtoolsPath = "samtools";
 	static String freebayesPath = "freebayes";
 	static String[] bamFiles = null;
+	static String bamFileList = null;
+
 	static int sgeTaskID = 1;
 	static int sgeTasks = 1;
 
@@ -32,12 +34,28 @@ class CLIParserFB
 			.withArgName("PATH")
 			.create());
 
-		options.addOption(OptionBuilder.withLongOpt("bam-file")
-			.withDescription("BAM file being processed")
+
+		// Ideally -b and -L could both be provided, but commons-cli doesn't
+		// seem to support that. What is important, is that one OR the other
+		// MUST be provided, and that does work
+		OptionGroup fileOptions = new OptionGroup();
+		fileOptions.setRequired(true);
+
+		fileOptions.addOption(OptionBuilder.withLongOpt("bam")
+			.withDescription("add FILE to the set of BAM files to be analyzed")
 			.hasArg()
 			.withArgName("FILE")
-			.isRequired()
+//			.isRequired()
 			.create("b"));
+
+		fileOptions.addOption(OptionBuilder.withLongOpt("bam-list")
+			.withDescription("a file containing a list of BAM files to be analyzed")
+			.hasArg()
+			.withArgName("FILE")
+//			.isRequired()
+			.create("L"));
+
+		options.addOptionGroup(fileOptions);
 
 
 		CommandLineParser parser = new BasicParser();
@@ -59,6 +77,10 @@ class CLIParserFB
 			// BAM file
 			if (cmd.hasOption("b"))
 				bamFiles = cmd.getOptionValues("b");
+
+			// Path to a list of BAM files
+			if (cmd.hasOption("L"))
+				bamFileList = cmd.getOptionValue("L");
 		}
 		catch (ParseException e)
 		{
