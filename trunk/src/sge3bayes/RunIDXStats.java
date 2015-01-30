@@ -10,7 +10,7 @@ public class RunIDXStats
 	ArrayList<String> collect()
 		throws Exception
 	{
-		ProcessBuilder pb = new ProcessBuilder(CLIParserFB.samtoolsPath, "idxstats", CLIParserFB.bamFile);
+		ProcessBuilder pb = new ProcessBuilder(CLIParserFB.samtoolsPath, "idxstats", CLIParserFB.bamFiles[0]);
 
 		Process proc = pb.start();
 
