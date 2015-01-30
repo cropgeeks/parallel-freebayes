@@ -32,9 +32,10 @@
 	<target name="jar" depends="clean, compile">
 		<jar jarfile="${pfb.jar}">
 			<fileset dir="${classes}"/>
+			<fileset dir="${src}"/>
 			<zipgroupfileset dir="${lib}"/>
 			<manifest>
-				<attribute name="Main-Class" value="ParallelFreeBayes"/>
+				<attribute name="Main-Class" value="ParallelRunner"/>
 				<attribute name="Class-Path"
 					value=""/>
 			</manifest>

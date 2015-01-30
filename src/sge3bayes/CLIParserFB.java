@@ -9,7 +9,7 @@ class CLIParserFB
 	// Options for running in ParallelFreeBayes mode
 	static String samtoolsPath = "samtools";
 	static String freebayesPath = "freebayes";
-	static String bamFile = null;
+	static String[] bamFiles = null;
 	static int sgeTaskID = 1;
 	static int sgeTasks = 1;
 
@@ -58,7 +58,7 @@ class CLIParserFB
 
 			// BAM file
 			if (cmd.hasOption("b"))
-				bamFile = cmd.getOptionValue("b");
+				bamFiles = cmd.getOptionValues("b");
 		}
 		catch (ParseException e)
 		{

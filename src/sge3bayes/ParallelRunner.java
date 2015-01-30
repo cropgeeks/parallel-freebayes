@@ -58,13 +58,22 @@ public class ParallelRunner
 		System.out.println("Contigs with reads: " + allContigs.size());
 		System.out.println("Contigs to be processed: " + (contigs.size()/2));
 
+		if (contigs.size() == 0)
+		{
+			System.out.println("There are no contigs to be processed by this task - quitting");
+			System.exit(0);
+		}
+
 
 		// Build the command to use for running FreeBayes
 		ArrayList<String> commands = new ArrayList<String>();
 
 		commands.add(CLIParserFB.freebayesPath);
-		commands.add("-b");
-		commands.add(CLIParserFB.bamFile);
+		for (String bamFile: CLIParserFB.bamFiles)
+		{
+			commands.add("-b");
+			commands.add(bamFile);
+		}
 
 		for (String cmd: CLIParserFB.fbOptions)
 			commands.add(cmd);
