@@ -69,11 +69,21 @@ public class ParallelRunner
 		ArrayList<String> commands = new ArrayList<String>();
 
 		commands.add(CLIParserFB.freebayesPath);
-		for (String bamFile: CLIParserFB.bamFiles)
+
+		if (CLIParserFB.bamFiles != null)
 		{
-			commands.add("-b");
-			commands.add(bamFile);
+			for (String bamFile: CLIParserFB.bamFiles)
+			{
+				commands.add("-b");
+				commands.add(bamFile);
+			}
 		}
+		if (CLIParserFB.bamFileList != null)
+		{
+			commands.add("-L");
+			commands.add(CLIParserFB.bamFileList);
+		}
+
 
 		for (String cmd: CLIParserFB.fbOptions)
 			commands.add(cmd);
