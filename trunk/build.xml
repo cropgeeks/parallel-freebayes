@@ -2,6 +2,7 @@
 
 	<property name="src" location="src"/>
 	<property name="lib" location="lib"/>
+	<property name="lib-devel" location="lib-devel"/>
 	<property name="classes" location="classes"/>
 
 	<property name="pfb.jar" value="${lib}/pfb.jar"/>
@@ -12,6 +13,7 @@
 	<path id="project.classpath">
 		<pathelement path="${classes}"/>
 		<fileset dir="${lib}"/>
+		<fileset dir="${lib-devel}"/>
 	</path>
 
 	<target name="compile" depends="init">
@@ -27,6 +29,16 @@
 			<fileset dir="${classes}" includes="**/*"/>
 			<fileset file="${pfb.jar}"/>
 		</delete>
+	</target>
+
+	<target name="test" depends="compile">
+		<junit printsummary="on" haltonerror="true" haltonfailure="true" dir="." fork="true">
+			<classpath refid="project.classpath"/>
+			<formatter type="plain" usefile="false"/>
+			<batchtest>
+				<fileset dir="${classes}" includes="**/*Test.class"/>
+			</batchtest>
+		</junit>
 	</target>
 
 	<target name="jar" depends="clean, compile">
