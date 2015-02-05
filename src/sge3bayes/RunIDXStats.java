@@ -5,9 +5,9 @@ import java.util.*;
 
 public class RunIDXStats
 {
-	private ArrayList<String> contigs = new ArrayList<String>();
+	private ArrayList<Contig> contigs = new ArrayList<>();
 
-	ArrayList<String> collect()
+	ArrayList<Contig> collect()
 		throws Exception
 	{
 		ProcessBuilder pb = new ProcessBuilder(CLIParserFB.samtoolsPath, "idxstats", getBamFile());
@@ -40,9 +40,21 @@ public class RunIDXStats
 		return in.readLine();
 	}
 
+	// Calculates and returns the total genome size across all the contigs
+	long calculateLength()
+	{
+		long length = 0;
+		for (Contig contig: contigs)
+			length += contig.getLength();
+
+		return length;
+	}
+
 	private class IdxStatsCatcher extends StreamCatcher
 	{
 		IdxStatsCatcher(InputStream in) { super(in); }
+
+		long bases = 0;
 
 		protected void processLine(String line)
 		{
@@ -50,11 +62,16 @@ public class RunIDXStats
 
 			if (tokens.length == 4)
 			{
-				String contigName = tokens[0];
-				int readCount = Integer.parseInt(tokens[2]);
+				// Each line contains a ref: name, length, mapped reads, unmapped reads
+				String name = tokens[0];
+				long length = Long.parseLong(tokens[1]);
+				long readCount = Long.parseLong(tokens[2]);
 
 				if (readCount > 0)
-					contigs.add(contigName);
+				{
+					contigs.add(new Contig(name, bases, length));
+					bases += length;
+				}
 			}
 		}
 	}
